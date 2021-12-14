@@ -1,0 +1,85 @@
+{
+  "code": 200,
+  "data": {
+    "table_list": [
+      "book_info",
+      "stu_info",
+      "stu_score"
+    ],
+    "db_info": {
+      "db": "demo",
+      "tables": 3,
+      "columns": 33,
+      "rows": 7533
+    },
+    "columns": [
+      {
+        "attr": "stu_no",
+        "type": "varchar(40)",
+        "rule": null,
+        "grade": -1
+      },
+      {
+        "attr": "stu_name",
+        "type": "varchar(32)",
+        "rule": null,
+        "grade": -1
+      },
+      {
+        "attr": "stu_sex",
+        "type": "varchar(2)",
+        "rule": null,
+        "grade": -1
+      },
+      {
+        "attr": "stu_grade",
+        "type": "varchar(20)",
+        "rule": null,
+        "grade": -1
+      },
+      {
+        "attr": "stu_major",
+        "type": "varchar(20)",
+        "rule": null,
+        "grade": -1
+      },
+      {
+        "attr": "consume",
+        "type": "varchar(100)",
+        "rule": null,
+        "grade": -1
+      },
+      {
+        "attr": "behavior",
+        "type": "varchar(100)",
+        "rule": null,
+        "grade": -1
+      },
+      {
+        "attr": "score",
+        "type": "varchar(100)",
+        "rule": null,
+        "grade": -1
+      },
+      {
+        "attr": "learn",
+        "type": "varchar(100)",
+        "rule": null,
+        "grade": -1
+      },
+      {
+        "attr": "updatetime",
+        "type": "timestamp",
+        "rule": null,
+        "grade": -1
+      }
+    ],
+	"chart_info": [
+        { "value": 48, "name": "High Sensitive Attr" },
+        { "value": 35, "name": "Middle Sensitive Attr" },
+        { "value": 80, "name": "Low Sensitive Attr'"},
+        { "value": 44, "name": "Not Sensitive Attr" }
+      ]
+  },
+  "msg": "请求成功"
+}
