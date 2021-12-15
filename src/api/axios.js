@@ -1,6 +1,6 @@
 import axios from 'axios'
 const myAxios = axios.create({
-    baseURL: '/mock',
+    baseURL: process.env.VUE_APP_BASE_API,
     timeout: 5000,
   });
 

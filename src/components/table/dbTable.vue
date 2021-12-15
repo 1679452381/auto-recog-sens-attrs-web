@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="db_info" stripe style="width: 100%">
+    <el-table :data="db_info" stripe style="width: 400px">
       <el-table-column prop="db" label="database" width="100">
       </el-table-column>
       <el-table-column prop="tables" label="tables" width="100">

@@ -52,7 +52,7 @@
         ></el-form-item>
       </el-form>
     </div>
-    <hr />
+    <el-divider></el-divider>
     <div class="main">
       <div class="top">
         <span>系统配置文件</span>
@@ -77,56 +77,46 @@
         </span>
         <el-upload
           class="upload-demo"
+          :file-list="fileList"
           action="https://jsonplaceholder.typicode.com/posts/"
+          :on-success="submitFile"
+          :show-file-list="false"
+          :on-progress="submiting"
         >
           <el-button size="medium" type="primary">Upload *.json</el-button>
         </el-upload>
         <div>
-          <el-button type="primary" size="medium" @click="sumbit">
-            submit
+          <el-button
+            type="primary"
+            size="medium"
+            @click="submit"
+            icon="el-icon-setting"
+          >
+            配置
           </el-button>
         </div>
       </div>
       <div class="content">
-        <div class="echars">
-          <Table :db_info="db_info"></Table>
-          <Pie :chart_info="chart_info"></Pie>
-        </div>
-        <div class="table">
-          <el-card>
-            <div class="table-select">
-              <el-select v-model="select_table" placeholder="..." size="small">
-                <el-option
-                  v-for="table in table_list"
-                  :key="table.id"
-                  :value="table"
-                ></el-option>
-              </el-select>
+        <el-tabs tab-position="left" style="height: 100%">
+          <el-tab-pane label="详细信息">
+            <div class="table">
+              <infoTable
+                :tableData="tableData"
+                :page_info="page_info"
+                :pagetotal="pagetotal"
+                :select_table="select_table"
+                :handleSizeChange="handleSizeChange"
+                :handleCurrentChange="handleCurrentChange"
+              ></infoTable>
             </div>
-            <el-table :data="tableData" stripe style="width: 100%">
-              <el-table-column label="ID" width="50" type="index">
-              </el-table-column>
-              <el-table-column prop="_attr" label="ATTRIBUTE" width="200">
-              </el-table-column>
-              <el-table-column prop="_col_type" label="TYPE" width="200">
-              </el-table-column>
-              <el-table-column prop="_sv_level" label="DEGREE" width="100">
-              </el-table-column>
-              <el-table-column prop="_is_sen" label="RULE" width="100">
-              </el-table-column>
-            </el-table>
-            <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="page_info.pagenum"
-              :page-sizes="[8, 16]"
-              :page-size="page_info.pagesize"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="page_info.pagetotal"
-            >
-            </el-pagination>
-          </el-card>
-        </div>
+          </el-tab-pane>
+          <el-tab-pane label="比例图">
+            <div class="echars">
+              <DbTable :db_info="db_info"></DbTable>
+              <Pie :chart_info="chart_info"></Pie>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
       </div>
     </div>
   </div>
@@ -134,12 +124,15 @@
 
 <script>
 import Pie from "@/components/echarts/Pie.vue";
-import Table from "@/components/table/Table.vue";
+import DbTable from "@/components/table/dbTable.vue";
+import infoTable from "@/components/table/infoTable.vue";
+// import debounce from '@/util/debounce'
 // import { mapMutations } from "vuex";
 export default {
   components: {
     Pie,
-    Table,
+    DbTable,
+    infoTable,
   },
   data() {
     return {
@@ -150,10 +143,17 @@ export default {
         port: 0,
         db: "demo",
       },
-      db_info: [],
       proportion: "10%",
       level: 1,
+      senWords: [],
+      senAttrs: [],
+      page_info: {
+        pagenum: 1,
+        pagesize: 8,
+      },
+      pagetotal: 0,
       select_table: "",
+      db_info: [],
       tableData: [],
       sens_levels: [1, 2, 3, 4, 5],
       proportions: [
@@ -170,11 +170,6 @@ export default {
       ],
       table_list: [],
       chart_info: [],
-      page_info: {
-        pagenum: 1,
-        pagesize: 8,
-        pagetotal: 0,
-      },
       dbRules: {
         host: { required: true, message: "请输入host", trigger: "blur" },
         user: { required: true, message: "请输入用户名", trigger: "blur" },
@@ -186,10 +181,11 @@ export default {
           trigger: "blur",
         },
       },
+      fileList: [],
     };
   },
   methods: {
-    sumbit() {
+    submit() {
       this.$refs.dbRef.validate(async (valid) => {
         if (!valid) {
           return;
@@ -198,8 +194,8 @@ export default {
           linkData: this.linkData,
           proportion: this.proportion,
           level: this.level,
-          senWords: [],
-          senAttrs: [],
+          senWords: this.senWords,
+          senAttrs: this.senAttrs,
           tabName: this.select_table,
           page_info: this.page_info,
         };
@@ -217,22 +213,51 @@ export default {
         this.table_list = data_info.table_list;
         this.select_table = this.table_list[0];
         this.tableData = data_info.columns;
-        this.page_info.pagetotal = this.tableData.length;
+        this.pagetotal = this.tableData.length;
         this.chart_info = data_info.chart_info;
         // console.log(JSON.stringify(this.chart_info));
         this.db_info = data_info.db_info;
       });
     },
+    // debounce_submit(){
+    //   debounce(this.submit,1000)
+    // },
     //每页多少条
     handleSizeChange(pageSize) {
       this.page_info.pagesize = pageSize;
       // console.log(JSON.stringify(this.page_info));
-      this.sumbit();
+      this.submit();
     },
     //当前页
     handleCurrentChange(currentPage) {
       this.page_info.pagenum = currentPage;
-      this.sumbit();
+      this.submit();
+    },
+    //上传文件时
+    submiting(event, file, fileList) {
+      // console.log(event, file, fileList);
+      console.log(event, file, fileList);
+    },
+    //处理文件
+    submitFile(response, file, fileList) {
+      console.log(file.name);
+      let end = file.name.split(".")[1];
+      if (end !== "json") {
+        return this.$message.error("上传失败，请上传json文件");
+      }
+      this.$message.success("上传成功");
+      console.log("1", response);
+      let reader = new FileReader();
+      reader.readAsText(file.raw);
+      reader.onload = (e) => {
+        const fileString = e.target.result;
+        const fileObj = JSON.parse(fileString);
+        console.log(fileObj);
+        this.senWords = fileObj.senWords;
+        this.senAttrs = fileObj.senAttrs;
+        console.log(this.senWords, this.senAttrs);
+      };
+      console.log(fileList);
     },
   },
 };
@@ -250,16 +275,12 @@ export default {
   flex-direction: row;
   justify-content: space-around;
 }
-.header-input {
-  /* width: 180px;
-  margin: 0 20px; */
-}
 .input-group {
   display: flex;
   justify-content: space-around;
 }
 .main {
-  margin: 10px 120px;
+  margin: 10px 0px;
 }
 .top {
   margin-right: 200px;
@@ -267,17 +288,21 @@ export default {
   justify-content: space-around;
   align-items: center;
 }
-
+.top el-button {
+  justify-self: flex-end;
+}
 .content {
-  display: flex;
-  justify-content: space-between;
+  margin: 30px 100px;
 }
 .echars {
-  margin-top: 20px;
+  display: flex;
+  flex-direction: row-reverse;
+  width: 800px;
+  margin: 20px auto;
 }
 .table {
-  width: 60%;
-  margin-top: 20px;
+  width: 800px;
+  margin: 20px auto;
   display: flex;
   flex-direction: column;
 }

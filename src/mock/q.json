@@ -1,0 +1,15 @@
+{
+  "linkData": {
+    "host": "09.0.0.0",
+    "user": "root",
+    "password": "zxczxc",
+    "port": 0,
+    "db": "demo"
+  },
+  "proportion": "10%",
+  "level": 1,
+  "senWords": [],
+  "senAttrs": [],
+  "tabName": "book_info",
+  "page_info": { "pagenum": 1, "pagesize": 8, "pagetotal": 9 }
+}

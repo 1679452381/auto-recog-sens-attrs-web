@@ -1,5 +1,5 @@
 <template>
-  <div id="myPieChart" ref="Pie" :style="{ width: '400px', height: '400px' }">
+  <div id="myPieChart" ref="Pie" :style="{ width: '500px', height: '400px' }">
     <p>{{ chart_info }}</p>
   </div>
 </template>
@@ -53,7 +53,7 @@ export default {
           {
             name: "Sensitive Attr",
             type: "pie",
-            radius: "60%",
+            radius: "55%",
             center: ["50%", "60%"],
             data: this.chart_info,
             emphasis: {
