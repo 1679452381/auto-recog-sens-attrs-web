@@ -54,7 +54,7 @@ export default {
             name: "Sensitive Attr",
             type: "pie",
             radius: "55%",
-            center: ["50%", "60%"],
+            center: ["40%", "65%"],
             data: this.chart_info,
             emphasis: {
               itemStyle: {

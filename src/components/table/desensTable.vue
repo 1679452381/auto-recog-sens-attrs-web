@@ -17,18 +17,15 @@
         highlight-current-row
         border
       >
-        <el-table-column label="ID" width="50" type="index"> </el-table-column>
-        <el-table-column prop="_attr" label="ATTRIBUTE" width="200">
-        </el-table-column>
-        <el-table-column prop="_col_type" label="TYPE" width="200">
-        </el-table-column>
-        <el-table-column prop="_sv_level" label="DEGREE" width="100">
-          <template slot-scope="scope">
-            <Tag :degree="scope.row._sv_level"></Tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="_is_sen" label="RULE" width="100">
-        </el-table-column>
+        <el-table-column label="ID" width="50" type="index"></el-table-column>
+        <el-table-column
+          v-for="item in tableData"
+          :key="item.id"
+          label="item"
+          prop="item"
+          width="50"
+          type="index"
+        ></el-table-column>
       </el-table>
       <el-pagination
         @size-change="handleSizeChange"
@@ -46,7 +43,6 @@
 
 <script>
 import Tag from "../table/Tags.vue";
-
 export default {
   components: {
     Tag,

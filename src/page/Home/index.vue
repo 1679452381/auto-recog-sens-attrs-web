@@ -5,7 +5,7 @@
         ref="dbRef"
         :model="linkData"
         :rules="dbRules"
-        class="form"
+        class="forms"
         label-width="100px"
       >
         <el-form-item label="host:" prop="host">
@@ -55,7 +55,7 @@
     <el-divider></el-divider>
     <div class="main">
       <div class="top">
-        <span>系统配置文件</span>
+        <h3>系统配置文件</h3>
         <span>
           <label for="">proportion：</label>
           <el-select v-model="proportion" placeholder="...">
@@ -97,8 +97,15 @@
         </div>
       </div>
       <div class="content">
-        <el-tabs tab-position="left" style="height: 100%">
-          <el-tab-pane label="详细信息">
+        <el-tabs
+          tab-position="left"
+          style="height: 100%; weight: 100%; z-index: -1"
+        >
+          <el-tab-pane label="详细信息" class="row">
+            <div class="echars">
+              <DbTable :db_info="db_info"></DbTable>
+              <Pie :chart_info="chart_info"></Pie>
+            </div>
             <div class="table">
               <infoTable
                 :tableData="tableData"
@@ -110,12 +117,7 @@
               ></infoTable>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="比例图">
-            <div class="echars">
-              <DbTable :db_info="db_info"></DbTable>
-              <Pie :chart_info="chart_info"></Pie>
-            </div>
-          </el-tab-pane>
+          <el-tab-pane label="数据脱敏"> </el-tab-pane>
         </el-tabs>
       </div>
     </div>
@@ -126,6 +128,7 @@
 import Pie from "@/components/echarts/Pie.vue";
 import DbTable from "@/components/table/dbTable.vue";
 import infoTable from "@/components/table/infoTable.vue";
+import { sens_levels, proportions } from "@/util/constant";
 // import debounce from '@/util/debounce'
 // import { mapMutations } from "vuex";
 export default {
@@ -155,19 +158,8 @@ export default {
       select_table: "",
       db_info: [],
       tableData: [],
-      sens_levels: [1, 2, 3, 4, 5],
-      proportions: [
-        "10%",
-        "20%",
-        "30%",
-        "40%",
-        "50%",
-        "60%",
-        "70%",
-        "80%",
-        "90%",
-        "100%",
-      ],
+      sens_levels: sens_levels,
+      proportions: proportions,
       table_list: [],
       chart_info: [],
       dbRules: {
@@ -266,14 +258,18 @@ export default {
 <style scoped>
 .header {
   display: flex;
-  /* justify-content: space-around; */
+  justify-content: space-between;
   align-items: center;
-  height: 100px;
+  height: 60px;
+  margin-top: 20px;
+  /* padding: auto 0; */
 }
-.form {
+.forms {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  align-items: center;
+  padding-top: 20px;
 }
 .input-group {
   display: flex;
@@ -283,28 +279,33 @@ export default {
   margin: 10px 0px;
 }
 .top {
-  margin-right: 200px;
+  /* margin-right: 200px; */
   display: flex;
   justify-content: space-around;
   align-items: center;
 }
-.top el-button {
-  justify-self: flex-end;
+.top label {
+  font-size: 14px;
+  color: #606266;
 }
 .content {
-  margin: 30px 100px;
+  margin: 30px 80px;
+}
+.row {
+  display: flex;
+  flex-direction: row;
 }
 .echars {
-  display: flex;
-  flex-direction: row-reverse;
-  width: 800px;
-  margin: 20px auto;
+  /* display: flex;
+  flex-direction: row-reverse; */
+  width: 450px;
+  margin-top: 20px;
 }
 .table {
   width: 800px;
-  margin: 20px auto;
-  display: flex;
-  flex-direction: column;
+  /* margin: 20px auto; */
+  /* display: flex;
+  flex-direction: column; */
 }
 .table-select {
   justify-self: flex-end;

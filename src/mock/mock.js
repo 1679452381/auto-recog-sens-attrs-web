@@ -17,19 +17,19 @@ const data = function (request) {
                 "stu_info",
                 "stu_score"
             ],
-            
+
             "db_info": [{
                 "db": "demo",
                 "tables": 3,
                 "columns": 33,
                 "rows": 7533
             }],
-            "columns":columns,
+            "columns": columns,
             "chart_info": [
-                { value: Random.natural(50), name: 'High Sensitive Attr' },
-                { value: Random.natural(50), name: 'Middle Sensitive Attr' },
-                { value: Random.natural(50), name: 'Low Sensitive Attr' },
-                { value: Random.natural(50), name: 'Not Sensitive Attr' }
+                { value: Random.natural(50, 3000), name: 'High Sensitive Attr' },
+                { value: Random.natural(50, 3000), name: 'Middle Sensitive Attr' },
+                { value: Random.natural(50, 3000), name: 'Low Sensitive Attr' },
+                { value: Random.natural(50, 3000), name: 'Not Sensitive Attr' }
             ]
         },
     }
@@ -40,12 +40,12 @@ function columns_mock(size) {
     let data = []
     for (let i = 0; i < size; i++) {
         data.push({
-            "_attr": Random.string( 'lower', 5 ),
+            "_attr": Random.string('lower', 5),
             "_col_type": "varchar(40)",
             "_ent": "8.8106",
             "_max_ent": "8.8106",
             "_sv": "1.0000",
-            "_sv_level": -1,
+            "_sv_level": Random.natural(0, 3),
             "_is_sen": -2
         })
     }
